@@ -28,6 +28,26 @@ class EntryPayload(BaseModel):
     remark: str | None = None
 
 
+class ForecastRoundPayload(BaseModel):
+    """提交训练：可覆盖模型当前的训练定义，未提交的字段沿用当前值。"""
+
+    values: dict[str, Any] = Field(default_factory=dict)
+
+
+class ForecastEvaluationPayload(BaseModel):
+    """录入评估并推进生效。轮次编号必填，评估与生效在同一个事务里完成。"""
+
+    round_no: str = Field(min_length=1, description="训练轮次编号，例如 FORE-0001-R001")
+    values: dict[str, Any] = Field(default_factory=dict)
+    publish: bool = Field(default=True, description="是否在同一事务里推进模型生效")
+
+
+class DatasetUpdatePayload(BaseModel):
+    """修改数据集定义：只追加新版本，不改写历史版本。"""
+
+    values: dict[str, Any] = Field(default_factory=dict)
+
+
 
 class QueryEntry(BaseModel):
     """查询语句明细结构。"""
